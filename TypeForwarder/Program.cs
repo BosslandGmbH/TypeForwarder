@@ -49,9 +49,15 @@ namespace TypeForwarder
             HashSet<string> fromTypes = new HashSet<string>(GetPublicTypeNames(from));
             using (StreamWriter sw = new StreamWriter(outPath))
             {
-                foreach (string toType in GetPublicTypeNames(to).Where(name => !fromTypes.Contains(name)))
+                foreach (
+                    string toType in
+                    GetPublicTypeNames(to)
+                        .Where(name => !fromTypes.Contains(name))
+                        .OrderBy(n => n, StringComparer.InvariantCultureIgnoreCase))
                 {
-                    sw.WriteLine("[assembly: System.Runtime.CompilerServices.TypeForwardedTo(typeof({0}))]", toType);
+                    sw.WriteLine(
+                        "[assembly: System.Runtime.CompilerServices.TypeForwardedTo(typeof({0}))]",
+                        toType);
                 }
             }
         }
